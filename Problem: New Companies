@@ -1,0 +1,19 @@
+/* Problem Description: https://www.hackerrank.com/challenges/the-company/problem * / 
+
+select distinct A.company_code, A.founder, 
+count(distinct B.lead_manager_code) as count_lead_manager , 
+count(distinct C.senior_manager_code) as count_senior_manager , 
+count(distinct D.manager_code) as count_manager , 
+count(distinct E.employee_code) as count_employee
+from company A 
+left join lead_manager B
+on A.company_code = B.company_code 
+left join senior_manager C 
+on B.lead_manager_code = C.lead_manager_code
+left join manager D
+on C.senior_manager_code = D.senior_manager_code
+left join employee E 
+on D.manager_code = E.manager_code
+group by 1, 2
+order by company_code
+; 
