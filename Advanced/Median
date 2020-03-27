@@ -1,5 +1,6 @@
 -- Example:https://www.hackerrank.com/challenges/weather-observation-station-20/problem 
 
+-- Sample: https://www.1keydata.com/sql/sql-median.html
 
 select round(C.lat_N, 4) median from 
 (select A.ID, A.lat_N , count(B.lat_N) rank 
