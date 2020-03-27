@@ -1,0 +1,20 @@
+/* Manhattan Distance */ 
+select round(max(lat_n) - min(lat_n) + max(long_w) - min(long_w), 4) as distance
+from station  ; 
+
+/* Euclidean distance */ 
+select round( sqrt( power((max(lat_n) - min(lat_n)), 2)  
+                   + power((max(long_w) - min(long_w)),2))
+        , 4) 
+  as distance
+from station  ; 
+
+/* Median lat_N */ 
+select round(C.lat_N, 4) median from 
+(select A.ID, A.lat_N , count(B.lat_N) rank 
+from station A , station B
+where A.lat_N < B.lat_N or (A.lat_N = B.lat_N and A.ID = B.ID) 
+group by 1, 2 
+order by 2 desc, 1 desc) C
+where C.rank in (select (count(*)+1) / 2 from station) 
+; 
