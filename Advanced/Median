@@ -2,13 +2,15 @@
 
 -- Sample: https://www.1keydata.com/sql/sql-median.html
 
-select round(C.lat_N, 4) median from 
+select round(avg(C.lat_N), 4) median from 
 (select A.ID, A.lat_N , count(B.lat_N) rank 
 from station A , station B
 where A.lat_N < B.lat_N or (A.lat_N = B.lat_N and A.ID = B.ID) 
 group by 1, 2 
-order by 2 desc, 1 desc) C
-where C.rank in (select (count(*)+1) / 2 from station) 
+order by 2 desc, 1 desc) C, 
+(select count(*) as total_rows 
+from station) D
+where C.rank in (floor((total_rows+1)/2), floor((total_rows+2)/2))
 ; 
 
 SELECT round(x.LAT_N,4) FROM Station x, Station y
@@ -28,8 +30,4 @@ SELECT round(avg(lat_n),4) FROM (
 WHERE t1.row_number in (floor((total_rows+1)/2), floor((total_rows+2)/2));
 
 
-SELECT round(lat_n,4) from (SELECT @rowid:=@rowid+1 as rowid,lat_n
-FROM station, (SELECT @rowid:=0) as init
-ORDER BY lat_n) as s 
-where rowid=(select round(count(*)/2) from station); 
 
