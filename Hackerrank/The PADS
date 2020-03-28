@@ -1,0 +1,11 @@
+--- reference: https://www.hackerrank.com/challenges/the-pads/forum
+
+select concat(name, "(", left(occupation,1), ")") as A
+from occupations 
+order by name;
+
+select T.A from 
+(select concat("There are a total of ", count(name), " ", lower(occupation), "s.") as A, count(name) as count, occupation
+from occupations 
+group by occupation
+order by count, occupation) as T; 
