@@ -1,0 +1,51 @@
+-- In MySQL version 8.0, there's a function row_number(); otherwise, use session variables to emulate row numbers; 
+-- Reference: https://www.mysqltutorial.org/mysql-row_number/
+
+---- Row numbers for entire data after sorting; 
+-- Method 1: First, define a variable named  @row_number and set its value to 0. The @row_number is a session variable indicated by the @ prefix.
+Then, select data from the table employees and increase the value of the  @row_number variable by one for each row. We use the LIMIT clause to constrain a number of returned rows to five.
+
+SET @rownum := 0; 
+SELECT @rownum:= @rownum + 1 as row_number, firstname, lastname 
+FROM employee 
+ORDER BY 2, 3
+LIMIT 5; 
+
+-- Method 2: use a derived table of row numbers and cross join with the main table; 
+
+SELECT @rownum:= @rownum + 1 as row_number, firstname, lastname 
+FROM employee , (select @rownum:= 0) B  -- derived table must have its alias to be syntatically correct; 
+ORDER BY 2, 3
+LIMIT 5; 
+
+-- Method 3: self join and apply ranking using count(); 
+SELECT A.firstname, A.lastname, count(B.*) as row_number
+FROM employee A, employee B
+WHERE A.firstname > B.firstname OR (A.firstname <= B.firstname AND A.lastname > B.lastname) OR (A.firstname = B.firstname AND A.lastname = B.lastname); 
+
+
+---- Row numbers by group, ex: rank payment within a customer; 
+-- Method 1: session variable 
+SET @rownum:= 0; 
+SET @customer_no:= 0; 
+SELECT @rownum:= CASE 
+  WHEN @customer_no = customer_number THEN @rownum+1 
+  ELSE 1 
+  END as rank, 
+  @customer_no := customer_number as customer_number, 
+  payment
+FROM data
+ORDER BY customer_number, payment; 
+
+
+-- Method 2: derived table
+SELECT @rownum:= CASE 
+  WHEN @customer_no = customer_number THEN @rownum+1 
+  ELSE 1 
+  END as rank, 
+  @customer_no := customer_number as customer_number, 
+  payment
+FROM data, (select @rownum:= 0, @customer_no := 0) R
+ORDER BY customer_number, payment; 
+
+
