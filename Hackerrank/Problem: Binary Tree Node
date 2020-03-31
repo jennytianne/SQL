@@ -1,0 +1,22 @@
+-- reference: https://www.hackerrank.com/challenges/binary-search-tree-1/problem ;
+
+
+(SELECT DISTINCT N NUM , "Root" TYPE 
+FROM BST WHERE P IS NULL) 
+UNION ALL 
+(SELECT DISTINCT N NUM, "Leaf" TYPE 
+FROM 
+(SELECT A.N, A.P, B.N NN
+FROM BST A
+LEFT JOIN BST B
+ON A.N = B.P) T 
+WHERE NN IS NULL) 
+UNION ALL 
+(SELECT DISTINCT N NUM, "Inner" TYPE
+FROM 
+(SELECT A.N, A.P, B.N NN
+FROM BST A
+LEFT JOIN BST B
+ON A.N = B.P) T
+WHERE NN IS NOT NULL AND P IS NOT NULL)
+ORDER BY NUM ; 
