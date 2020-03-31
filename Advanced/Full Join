@@ -1,0 +1,16 @@
+-- MYSQL doesn't have full join, so have to create that from left and right joins; 
+-- reference: https://stackoverflow.com/questions/4796872/how-to-do-a-full-outer-join-in-mysql
+
+
+-- removes duplicates; 
+
+SELECT *
+FROM `t1`
+LEFT OUTER JOIN `t2` ON `t1`.`id` = `t2`.`id`
+
+UNION
+
+SELECT *
+FROM `t1`
+RIGHT OUTER JOIN `t2` ON `t1`.`id` = `t2`.`id`
+WHERE `t1`.`id` IS NULL;
