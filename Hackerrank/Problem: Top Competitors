@@ -1,0 +1,17 @@
+-- https://www.hackerrank.com/challenges/full-score/problem
+
+-- inner join is very important, cannot use left join. Because here we're counting everything from A
+-- group by, having, order by can all just use number reference or plain/renamed variable name without table reference
+-- can directly have count() in having and not in select, because select comes last from the combined table
+
+select A.hacker_id,  D.name 
+from submissions A 
+inner join challenges B
+on A.challenge_id = B.challenge_id 
+inner join difficulty C 
+on B.difficulty_level = C.difficulty_level and A.score = C.score
+inner join hackers D 
+on A.hacker_id = D.hacker_id 
+group by hacker_id, name
+having count(A.challenge_id)  > 1 
+order by count(A.challenge_id) desc , hacker_id; 
