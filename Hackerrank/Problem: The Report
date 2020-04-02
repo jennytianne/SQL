@@ -1,0 +1,8 @@
+-- https://www.hackerrank.com/challenges/the-report/problem 
+
+select case when B.grade >= 8 then A.name else null end as name,  B.grade, A.marks
+from Students A 
+inner join grades B 
+on A.marks >= B.min_mark and A.marks <= B.max_mark
+order by grade desc, name, marks; 
+
