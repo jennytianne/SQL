@@ -1,4 +1,4 @@
--- Generate a column from 0 to 99
+-- Method 1: Generate a column from 0 to 99
 select (one + ten) as num from 
 (select 0 one
 union all
@@ -38,3 +38,11 @@ union all
 select 80 ten
 union all 
 select 90 ten) tens; 
+
+-- Method 2: Generate 1 to 1000; 
+set @potential_prime = 0;
+
+SELECT @potential_prime := @potential_prime + 1 AS POTENTIAL_PRIME FROM
+    information_schema.tables t1,
+    information_schema.tables t2
+    LIMIT 1000; 
