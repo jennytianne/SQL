@@ -1,0 +1,39 @@
+-- https://www.hackerrank.com/challenges/harry-potter-and-wands/problem
+
+-- wands distinct by id, code, power => coins_needed 
+-- wands_property distinct by code => age, is_evil 
+
+
+
+-- METHOD 1: USE WHERE = SUB QUERY  
+
+-- find the min(coins_needed) for any given code(age) and power
+-- merge in age in place of code, subset to non-evil 
+-- use where clause to subset wands to limit to IDs with min coins
+-- order by power desc, age desc
+
+select distinct A.ID, B.age, A.coins_needed, A.power 
+from wands A 
+inner join wands_property B 
+on A.code = B.code and B.is_evil <> 1 
+where A.coins_needed = (select min(c.coins_needed) from wands c 
+                       where A.code = c.code and A.power = c.power) 
+order by A.power desc, B.age desc; 
+
+
+
+
+-- METHOD 2: INNER JOIN TO SUBSET
+
+-- find the min coins for each age(code) and power where non-evil 
+-- merge in ID by equating code, power and coins_needed 
+-- order by power desc, age desc 
+
+select distinct W.ID, C.age , C.coins_needed, C.power 
+from wands W 
+inner join 
+(select distinct B.age, A.power, A.code, min(A.coins_needed) as coins_needed
+from wands A inner join wands_property B on a.code = B.code where B.is_evil != 1 
+ group by B.age, A.power, A.code) C 
+on W.coins_needed = C.coins_needed and W.power = C.power and W.code = C.code
+order by C.power desc, C.age desc; 
