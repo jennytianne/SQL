@@ -1,0 +1,23 @@
+-- https://www.hackerrank.com/challenges/challenges/problem 
+
+
+
+select A.hacker_id, A.name, count(B.challenge_id) as count
+from hackers A
+inner join challenges B
+on A.hacker_id = B.hacker_id
+group by A.hacker_id, A.name
+having count in 
+    (select count 
+    from (select hacker_id, count(challenge_id) as count 
+        from challenges 
+        group by hacker_id) temp1
+    group by count 
+    having count(hacker_id) < 2 or count = 
+        (select max(count) as max from 
+            (select hacker_id, count(challenge_id) as count 
+            from challenges 
+            group by hacker_id ) temp0))
+order by count desc, hacker_id; 
+
+
