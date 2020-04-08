@@ -1,0 +1,15 @@
+-- https://www.hackerrank.com/challenges/contest-leaderboard/problem 
+
+-- hacker_id, name, total_score (sum of maximum scores for all challenges) 
+
+
+select A.hacker_id, A.name, sum(B.score) as total_score
+from hackers A
+inner join  
+  (select hacker_id, challenge_id, max(score) as score 
+  from submissions
+  group by hacker_id, challenge_id) B
+on A.hacker_id = B.hacker_id
+group by hacker_id, name
+having total_score > 0 
+order by total_score desc, hacker_id;
