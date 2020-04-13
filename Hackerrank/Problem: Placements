@@ -1,0 +1,12 @@
+-- https://www.hackerrank.com/challenges/placements/problem
+
+select A.name 
+from Students A
+inner join Friends B
+on A.ID = B.ID
+inner join Packages C 
+on A.ID = C.ID
+inner join Packages D 
+on B.Friend_ID = D.ID 
+where C.Salary < D.Salary
+order by D.Salary; 
