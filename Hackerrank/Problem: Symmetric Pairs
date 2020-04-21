@@ -1,0 +1,13 @@
+-- https://www.hackerrank.com/challenges/symmetric-pairs/problem
+select A.X, A.Y
+from Functions A 
+inner join Functions B 
+on A.Y = B.X 
+where A.X = B.Y and A.X < A.Y
+union all 
+select X, Y 
+from Functions 
+where X = Y 
+group by X, Y 
+having count(*)> 1 
+order by X; 
