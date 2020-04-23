@@ -1,0 +1,15 @@
+-- https://www.hackerrank.com/challenges/draw-the-triangle-2/problem
+
+-- row to row increments: use @row:= @row + 1 
+-- a default table in MySQL: information_schema.tables
+-- repeat(string, number_of_times) 
+
+set @row := 0;
+select repeat('* ', @row := @row + 1) 
+from information_schema.tables 
+where @row < 20; 
+
+
+select repeat("* ", @row:= @row + 1)
+from information_schema.tables, (select @row:= 0) B 
+where @row < 20; 
